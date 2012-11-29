@@ -1,0 +1,55 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+allprojects {
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+}
+
+group = 'com.redhat.qe'
+version = '1.0.0'
+
+sourceSets {
+    main {
+        java {
+            srcDirs "src"
+        }
+    }
+}
+
+eclipse {
+    classpath {
+        defaultOutputDir = file('build')
+    }
+}
+
+repositories {
+    mavenCentral()
+    [
+        'https://repository.jboss.org/nexus/content/repositories/thirdparty-uploads',
+        'http://clojars.org/repo',
+        'http://download.java.net/maven/2/',
+        'http://repository.codehaus.org',
+        'http://snapshots.repository.codehaus.org'
+    ].each { repo ->  
+        maven {
+            url repo
+        }
+    }
+}
+
+dependencies {
+    compile 'org.apache.httpcomponents:httpclient:4.2.2',
+            'oauth.signpost:oauth-signpost:1.2.1.2',
+            'oauth.signpost:signpost-commonshttp4:1.2.1.2'
+}
+
+jar {
+}
+
+task writeNewPom << {
+    pom {
+    }.writeTo("$buildDir/libs/pom.xml")
+}
+
